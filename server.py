@@ -1,0 +1,30 @@
+from flask import Flask, request, jsonify
+
+from dm import do_dm
+
+app = Flask(__name__)
+
+@app.route('/post-json', methods=['POST'])
+def receive_json():
+    # Get the JSON data from the request
+    data = request.get_json()
+
+    # Print the received JSON
+    print("Received JSON:")
+    msg = ""
+    if data.get("eventType") == "Download":
+        msg += f"# {data.get("series", {}).get("title")}\nDone downloading:\n"
+        episodes = data.get("episodes")
+        if episodes:
+            for ep in episodes:
+                msg += f"S{ep.get("seasonNumber")}E{ep.get("episodeNumber")} - {ep.get("title")}"
+    else:
+        pass
+
+    do_dm(msg)  # Send the DM
+
+    # Respond back to the client
+    return jsonify({"status": "success", "received": data}), 200
+
+if __name__ == '__main__':
+    app.run(debug=True)
