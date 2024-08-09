@@ -11,9 +11,9 @@ def prompt_user_data():
 
     popup_window = tk.Tk()
     popup_window.title("Enter Details")
-    popup_window.geometry("300x150")
+    popup_window.geometry("300x200")
 
-    token_label = tk.Label(popup_window, text="Token")
+    token_label = tk.Label(popup_window, text="Bot Token")
     token_label.pack(pady=(10, 0))
     token_entry = tk.Entry(popup_window)
     token_entry.pack(pady=(0, 10))
