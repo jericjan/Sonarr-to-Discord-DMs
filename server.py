@@ -6,6 +6,10 @@ from dm import do_dm
 
 app = Flask(__name__)
 
+@app.route('/', methods=['GET'])
+def home():
+    return 'Hi.'
+
 @app.route('/post-json', methods=['POST'])
 def receive_json():
     # Get the JSON data from the request
