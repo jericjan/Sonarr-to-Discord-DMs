@@ -8,8 +8,10 @@ from gui import prompt_user_data
 def run(skip_check: bool = False):
     json_file = get_file("data.json")
     if not json_file.exists() or skip_check:
-        logging.info("No JSON file found")
+        logging.info("No JSON file found or checking was skipped")
         token, user_id = prompt_user_data()
+        if (token, user_id) == (None, None):
+            return
         with json_file.open('w', encoding='utf-8') as f:
             json.dump({'token':token, 'user_id': user_id}, f)
 
