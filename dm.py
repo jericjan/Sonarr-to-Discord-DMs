@@ -2,13 +2,22 @@ import requests
 import os
 from dotenv import load_dotenv
 import time
+import logging
+
+
+
 
 load_dotenv()
 
 def send_req(url: str, headers: dict[str, str] | None =None, data: dict[str, str] | None =None):
     while True:
-        response = requests.post(url, headers=headers, json=data)
-        print(response.headers)
+        try:
+            response = requests.post(url, headers=headers, json=data)
+        except requests.exceptions.RequestException:
+            logging.info("Something went wrong. Trying again in 5 secs")
+            time.sleep(5)
+            continue
+
         # If request was successful, return the response
         if response.status_code == 200:
             return response
@@ -19,16 +28,16 @@ def send_req(url: str, headers: dict[str, str] | None =None, data: dict[str, str
             
             if retry_after:
                 retry_after_seconds = float(retry_after)
-                print(f"Rate-limited. Waiting {retry_after_seconds} seconds before retrying...")
+                logging.info(f"Rate-limited. Waiting {retry_after_seconds} seconds before retrying...")
                 time.sleep(retry_after_seconds)
             else:
-                print("Rate-limited, but no Retry-After header found. Waiting 10 secs before retrying...")
+                logging.info("Rate-limited, but no Retry-After header found. Waiting 10 secs before retrying...")
                 time.sleep(10)
         
         else:
             # Handle other potential errors
-            print(f"Request failed with status code {response.status_code}")
-            response.raise_for_status()    
+            logging.info(f"Request failed with status code {response.status_code}. Trying again in 10 secs.")
+            time.sleep(10)
 
 def do_dm(message: str):
     # Your bot token here
@@ -66,8 +75,8 @@ def do_dm(message: str):
         message_response = send_req(message_url, headers, message_data)
         
         if message_response.status_code == 200:
-            print('Message sent successfully!')
+            logging.info('Message sent successfully!')
         else:
-            print(f'Failed to send message: {message_response.status_code} {message_response.text}')
+            logging.error(f'Failed to send message: {message_response.status_code} {message_response.text}')
     else:
-        print(f'Failed to create DM channel: {response.status_code} {response.text}')
+        logging.error(f'Failed to create DM channel: {response.status_code} {response.text}')

@@ -1,4 +1,6 @@
+import json
 from flask import Flask, request, jsonify
+import logging
 
 from dm import do_dm
 
@@ -10,7 +12,7 @@ def receive_json():
     data = request.get_json()
 
     # Print the received JSON
-    print("Received JSON:")
+    logging.info("Received JSON")
     msg = ""
     if data.get("eventType") == "Download":
         msg += f"# {data.get("series", {}).get("title")}\nDone downloading:\n"
@@ -18,10 +20,13 @@ def receive_json():
         if episodes:
             for ep in episodes:
                 msg += f"S{ep.get("seasonNumber")}E{ep.get("episodeNumber")} - {ep.get("title")}"
-    else:
-        pass
 
-    do_dm(msg)  # Send the DM
+        do_dm(msg)  # Send the DM
+    else:
+        msg += "```\n"
+        msg += json.dumps(data)
+        msg += "\n```"
+        do_dm(msg)
 
     # Respond back to the client
     return jsonify({"status": "success", "received": data}), 200
