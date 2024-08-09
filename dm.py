@@ -1,13 +1,9 @@
+import json
 import requests
-import os
-from dotenv import load_dotenv
 import time
 import logging
 
-
-
-
-load_dotenv()
+from files import get_file
 
 def send_req(url: str, headers: dict[str, str] | None =None, data: dict[str, str] | None =None):
     while True:
@@ -40,24 +36,36 @@ def send_req(url: str, headers: dict[str, str] | None =None, data: dict[str, str
             time.sleep(10)
 
 def do_dm(message: str):
+    with get_file('data.json').open(encoding='utf-8') as f:
+        try:
+            data = json.load(f)
+        except json.decoder.JSONDecodeError:
+            logging.error("JSON is invalid")
+            return
     # Your bot token here
-    TOKEN = os.getenv("TOKEN")
-
+    token = data.get("token")
+    if token is None:
+        logging.error("Bot token not found")
+        return
+    
     # The ID of the user you want to send a DM to
-    USER_ID = os.getenv("USER_ID")
+    user_id = data.get("user_id")
+    if user_id is None:
+        logging.error("User ID not found")
+        return
 
     # Discord API endpoint to create a DM channel
     dm_url = 'https://discord.com/api/v10/users/@me/channels'
 
     # Headers with the authorization token
     headers = {
-        'Authorization': f'Bot {TOKEN}',
+        'Authorization': f'Bot {token}',
         'Content-Type': 'application/json'
     }
 
     # Create a DM channel with the user
     dm_data = {
-        'recipient_id': USER_ID
+        'recipient_id': user_id
     }
 
     response = requests.post(dm_url, headers=headers, json=dm_data)

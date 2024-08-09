@@ -1,15 +1,15 @@
 import pystray # type: ignore
 from PIL import Image
-from pathlib import Path
+import data_setup
 from server import app
 import logging
 import threading
 import subprocess
-
-def get_file(name: str) -> Path:
-    return Path(__file__).resolve().parent / name 
+from files import get_file
 
 logging.basicConfig(filename=str(get_file('output.log')), level=logging.INFO)
+
+data_setup.run()
 
 def exit_app(icon: pystray._base.Icon): # type: ignore
     icon.visible = False
@@ -23,6 +23,7 @@ img = Image.open(get_file("icon.png"))
 icon = pystray.Icon('icon')
 icon.menu =pystray.Menu(
     pystray.MenuItem('Open log file', find_log),
+    pystray.MenuItem('Edit data', data_setup.edit),
     pystray.MenuItem('Exit', lambda : exit_app(icon)),    
 )
 icon.icon = img
