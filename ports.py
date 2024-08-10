@@ -1,6 +1,7 @@
 import socket
 import logging
 
+
 def port_available(port: int):
     status = False
     host = "localhost"
@@ -10,9 +11,11 @@ def port_available(port: int):
 
     # Try to connect to the given host and port
     if sock.connect_ex((host, port)) == 0:
-        logging.info("Port " + str(port) + " is open") # A server is running with this port
+        logging.info(
+            "Port " + str(port) + " is open"
+        )  # A server is running with this port
     else:
-        logging.info("Port " + str(port) + " is closed") # Nothing uses this port
+        logging.info("Port " + str(port) + " is closed")  # Nothing uses this port
         status = True
 
     # Close the connection
