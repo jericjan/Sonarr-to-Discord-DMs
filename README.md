@@ -1,4 +1,4 @@
-# StoDD
+# STDD
 A way for Sonarr to notify you through Discord DMs
 
 # Pre-reqs:
