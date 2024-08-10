@@ -76,7 +76,7 @@ def do_data_setup():
     if setup_success == False:
         logging.info("First time setup failed. Exiting program.")
         get_file("data.json").unlink()
-        exit()
+        root.destroy()
 
     logging.info("Setup succeeded")
 
