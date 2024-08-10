@@ -9,12 +9,18 @@ def prompt_user_data() -> tuple[str, str, str]:
     cancelled = True
     stopped = False
     def on_ok():
-        nonlocal result, cancelled
+        nonlocal result, cancelled, stopped
+
+        # Seems I need both of them??
+        # popup_window.quit()
         popup_window.destroy()
+
         result = (token_var.get(), id_var.get(), port_var.get())
         cancelled = False
+        stopped = True
+        logging.info("OK pressed")
 
-    popup_window = tk.Tk()
+    popup_window = tk.Toplevel()
     popup_window.title("Enter Details")
     popup_window.geometry("300x269")
 
@@ -60,8 +66,10 @@ def prompt_user_data() -> tuple[str, str, str]:
         popup_window.after(1000, print_size)
 
     popup_window.after(0, print_size)
-    popup_window.mainloop()
-    if cancelled:
-        raise Exception("Window has been closed without saving")
+    popup_window.wait_window()
     stopped = True
+    if cancelled:
+        logging.info("Window closed without saving")
+        raise Exception("Window has been closed without saving")
+    logging.info("Window closed with OK")
     return result

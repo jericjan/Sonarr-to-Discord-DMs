@@ -1,4 +1,3 @@
-import threading
 from files import get_file, save_data
 import logging
 from gui import prompt_user_data
@@ -24,12 +23,3 @@ def run(edit: bool = False):
         except Exception as e:
             logging.info(e)
     return success
-def edit():
-    """
-    Just a threaded version of `run()`.
-    Yes, this means it runs Tkinter in a thread.
-    But hear me out, I don't even need Tkinter running all the time.
-    It kills Tkinter when it's done prompting.
-    """
-    t = threading.Thread(target=run, args=(True,))
-    t.start()
