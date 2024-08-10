@@ -1,6 +1,7 @@
-import requests
-import time
 import logging
+import time
+
+import requests
 
 from files import get_data
 

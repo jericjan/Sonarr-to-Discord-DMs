@@ -8,6 +8,7 @@ def prompt_user_data() -> tuple[str, str, str]:
     result: tuple[str, str, str] = ("", "", "")
     cancelled = True
     stopped = False
+
     def on_ok():
         nonlocal result, cancelled, stopped
 
@@ -60,7 +61,9 @@ def prompt_user_data() -> tuple[str, str, str]:
     ok_button.pack(pady=10)
 
     def print_size():
-        logging.debug(f"Window is {popup_window.winfo_width()}x{popup_window.winfo_height()}")
+        logging.debug(
+            f"Window is {popup_window.winfo_width()}x{popup_window.winfo_height()}"
+        )
         if stopped:
             return
         popup_window.after(1000, print_size)

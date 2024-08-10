@@ -1,6 +1,7 @@
 import json
-from flask import Flask, request, jsonify
 import logging
+
+from flask import Flask, jsonify, request
 
 from dm import do_dm
 

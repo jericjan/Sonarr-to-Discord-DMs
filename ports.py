@@ -1,5 +1,5 @@
-import socket
 import logging
+import socket
 
 
 def port_available(port: int):
